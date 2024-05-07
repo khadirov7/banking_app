@@ -61,7 +61,7 @@ class UserCardsBloc extends Bloc<UserCardsEvent, CardsState> {
   }
 
   _listenCard(GetCardsByUserId event, Emitter emit) async {
-    emit.onEach(
+    await emit.onEach(
       cardsRepository.getCardsByUserId(event.userId),
       onData: (List<CardModel> userCards) {
         emit(state.copyWith(userCards: userCards));
@@ -69,7 +69,7 @@ class UserCardsBloc extends Bloc<UserCardsEvent, CardsState> {
     );
   }
   _listenCardDatabase(GetCardsDatabaseEvent event, Emitter emit) async {
-    emit.onEach(
+    await emit.onEach(
       cardsRepository.getCardsDatabase(),
       onData: (List<CardModel> userCards) {
         emit(state.copyWith(cardsDB: userCards));
