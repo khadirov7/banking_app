@@ -39,5 +39,3 @@ jobs:
         with:
           name: release-apk
           path: build/app/outputs/flutter-apk/app-release.apk
-          github_token: ${{ secrets.MY_TOKEN }}
-          publish_dir: ./
