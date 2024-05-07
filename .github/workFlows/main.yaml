@@ -6,7 +6,6 @@ on:
       - master
 
   workflow_dispatch:
-
 jobs:
   flutter_test:
     name: Flutter Test
