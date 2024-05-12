@@ -266,11 +266,11 @@ class _AuthScreenState extends State<AuthScreen> {
         }
         if (state.status == FormsStatus.authenticated) {
           if (state.statusMessage == 'registered') {
-            BlocProvider.of<UserBloc>(context)
-                .add(AddUserEvent(userModel: state.userModel));
+            BlocProvider.of<UserProfileBloc>(context)
+                .add(AddUserEvent(state.userModel));
           } else {
-            BlocProvider.of<UserBloc>(context).add(
-              GetUserByUIDEvent(state.userModel.authUid),
+            BlocProvider.of<UserProfileBloc>(context).add(
+              GetCurrentUserEvent(state.userModel.authUid),
             );
           }
           Navigator.pushNamedAndRemoveUntil(

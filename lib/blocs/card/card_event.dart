@@ -1,62 +1,54 @@
-import 'package:banking_app/data/models/card_model.dart';
+
 import 'package:equatable/equatable.dart';
 
-abstract class UserCardsEvent extends Equatable{
-  @override
-  List<Object?>get props=>[];}
+import '../../data/models/card_model.dart';
 
+abstract class UserCardsEvent extends Equatable {}
 
-
-class AddCardEvent extends UserCardsEvent{
+class AddCardEvent extends UserCardsEvent {
   final CardModel cardModel;
-  AddCardEvent({required this.cardModel});
+
+  AddCardEvent(this.cardModel);
+
   @override
-  List<Object?>get props=>[
-    cardModel
-  ];
+  List<Object?> get props => [cardModel];
 }
 
-class UpdateCardEvent extends UserCardsEvent{
+class UpdateCardEvent extends UserCardsEvent {
   final CardModel cardModel;
-  UpdateCardEvent({required this.cardModel});
+
+  UpdateCardEvent(this.cardModel);
+
   @override
-  List<Object?>get props=>[
-    cardModel
-  ];
+  List<Object?> get props => [cardModel];
 }
 
-
-class DeleteCardEvent extends UserCardsEvent{
+class DeleteCardEvent extends UserCardsEvent {
   final String cardDocId;
-  DeleteCardEvent({required this.cardDocId});
+
+  DeleteCardEvent(this.cardDocId);
+
   @override
-  List<Object?>get props=>[
-    cardDocId
-  ];
+  List<Object?> get props => [cardDocId];
 }
 
-class GetCardsByUserId extends UserCardsEvent{
-  final String userId;
+class GetCardsByUserId extends UserCardsEvent {
   GetCardsByUserId({required this.userId});
+
+  final String userId;
+
   @override
-  List<Object?>get props=>[
-    userId
-  ];
+  List<Object?> get props => [userId];
 }
-class GetUserByUIDEvent extends UserCardsEvent{
-  final String uid;
-  GetUserByUIDEvent(this.uid);
+
+class GetActiveCards extends UserCardsEvent {
   @override
-  List<Object?>get props=>[uid
-  ];
+  List<Object?> get props => [];
 }
+
 class GetCardsDatabaseEvent extends UserCardsEvent {
   GetCardsDatabaseEvent();
+
   @override
-  List<Object?>get props=>[];
+  List<Object?> get props => [];
 }
-
-
-
-
-

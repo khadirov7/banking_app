@@ -2,63 +2,49 @@
 import 'package:equatable/equatable.dart';
 import '../../data/models/user_mode.dart';
 
-abstract class UserEvent extends Equatable{
-  @override
-  List<Object?>get props=>[];}
+abstract class UserProfileEvent extends Equatable {}
 
-
-
-class AddUserEvent extends UserEvent{
+class AddUserEvent extends UserProfileEvent {
   final UserModel userModel;
-  AddUserEvent({required this.userModel});
+
+  AddUserEvent(this.userModel);
+
   @override
-  List<Object?>get props=>[
-    userModel
-  ];
+  List<Object?> get props => [userModel];
 }
 
-class UpdateUserEvent extends UserEvent{
+class UpdateUserEvent extends UserProfileEvent {
   final UserModel userModel;
-  UpdateUserEvent({required this.userModel});
+
+  UpdateUserEvent(this.userModel);
+
   @override
-  List<Object?>get props=>[
-    userModel
-  ];
+  List<Object?> get props => [userModel];
 }
 
-
-class DeleteUserEvent extends UserEvent{
+class DeleteUserEvent extends UserProfileEvent {
   final UserModel userModel;
-  DeleteUserEvent({required this.userModel});
+
+  DeleteUserEvent(this.userModel);
+
   @override
-  List<Object?>get props=>[
-    userModel
-  ];
+  List<Object?> get props => [userModel];
 }
 
-class GetUserByDocIdEvent extends UserEvent{
-  final String docId;
+class GetUserByDocIdEvent extends UserProfileEvent {
   GetUserByDocIdEvent({required this.docId});
+
+  final String docId;
+
   @override
-  List<Object?>get props=>[
-    docId
-  ];
-}
-class GetUserByUIDEvent extends UserEvent{
-  final String uid;
-  GetUserByUIDEvent(this.uid);
-  @override
-  List<Object?>get props=>[uid
-  ];
+  List<Object?> get props => [docId];
 }
 
-class GetCurrentUserEvent extends UserEvent {
+class GetCurrentUserEvent extends UserProfileEvent {
   final String uid;
+
   GetCurrentUserEvent(this.uid);
+
   @override
   List<Object?> get props => [uid];
 }
-
-
-
-

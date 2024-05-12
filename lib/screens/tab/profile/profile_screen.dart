@@ -25,7 +25,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         title: Text('Profile'),
         centerTitle: true,
       ),
-      body: BlocBuilder<UserBloc,UserState>(builder: (context,state) {
+      body: BlocBuilder<UserProfileBloc,UserState>(builder: (context,state) {
         return Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(

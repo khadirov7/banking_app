@@ -1,48 +1,49 @@
-import 'package:banking_app/data/models/card_model.dart';
 import 'package:equatable/equatable.dart';
-
+import '../../data/models/card_model.dart';
 import '../../data/models/forms_status_model.dart';
 
-class CardsState extends Equatable {
-
+class UserCardsState extends Equatable {
   final List<CardModel> userCards;
   final List<CardModel> cardsDB;
-
-  final FormsStatus formsStatus;
+  final List<CardModel> activeCards;
+  final FormsStatus status;
   final String errorMessage;
   final String statusMessage;
 
-
-  const CardsState({
-    required this.formsStatus,
-    required this.cardsDB,
+  const UserCardsState({
+    required this.status,
     required this.userCards,
+    required this.errorMessage,
     required this.statusMessage,
-    required this.errorMessage
+    required this.cardsDB,
+    required this.activeCards,
   });
 
-  CardsState copyWith({
+  UserCardsState copyWith({
     List<CardModel>? userCards,
     List<CardModel>? cardsDB,
-    FormsStatus? formsStatus,
+    List<CardModel>? activeCards,
+    FormsStatus? status,
     String? errorMessage,
     String? statusMessage,
   }) {
-    return CardsState(
-      cardsDB: cardsDB ?? this.cardsDB,
-      formsStatus: formsStatus ?? this.formsStatus,
+    return UserCardsState(
       userCards: userCards ?? this.userCards,
+      status: status ?? this.status,
+      errorMessage: errorMessage ?? this.errorMessage,
       statusMessage: statusMessage ?? this.statusMessage,
-      errorMessage: errorMessage ?? this.errorMessage,);
+      cardsDB: cardsDB ?? this.cardsDB,
+      activeCards: activeCards ?? this.activeCards,
+    );
   }
 
   @override
-  List<Object?> get props =>
-      [
-        cardsDB,
-        userCards,
-        errorMessage,
-        formsStatus,
-        statusMessage,
-      ];
+  List<Object?> get props => [
+    status,
+    userCards,
+    errorMessage,
+    statusMessage,
+    cardsDB,
+    activeCards,
+  ];
 }

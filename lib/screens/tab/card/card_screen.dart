@@ -20,7 +20,7 @@ class _CardScreenState extends State<CardScreen> {
   @override
   void initState() {
     context.read<UserCardsBloc>().add(GetCardsByUserId(
-        userId: context.read<UserBloc>().state.userModel.userId));
+        userId: context.read<UserProfileBloc>().state.userModel.userId));
     super.initState();
   }
 
@@ -41,7 +41,7 @@ class _CardScreenState extends State<CardScreen> {
           ),
         ],
       ),
-      body: BlocBuilder<UserCardsBloc, CardsState>(
+      body: BlocBuilder<UserCardsBloc, UserCardsState>(
         builder: (context, state) {
           if (state.userCards.isEmpty) {
             return  Center(
@@ -72,7 +72,7 @@ class _CardScreenState extends State<CardScreen> {
                               onSelected: (value) {
                                 if (value == 'update') {
                                 } else if (value == 'delete') {
-                                  context.read<UserCardsBloc>().add(DeleteCardEvent(cardDocId: card.cardId));
+                                  context.read<UserCardsBloc>().add(DeleteCardEvent(card.cardId));
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(content: Text("Karta ochirildi")),
                                   );
@@ -109,7 +109,7 @@ class _CardScreenState extends State<CardScreen> {
                           padding: const EdgeInsets.only(
                               left: 40.0, top: 15, bottom: 5),
                           child: Text(
-                            "${card.cardNumber.substring(0, 4)} ${card.cardNumber.substring(4, 8)} ${card.cardNumber.substring(8, 12)} ${card.cardNumber.substring(8, 12)}",
+                            card.cardNumber,
                             style: AppTextStyle.interSemiBold.copyWith(
                                 color: Colors.white,
                                 fontSize: 20,

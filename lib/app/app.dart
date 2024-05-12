@@ -1,6 +1,7 @@
 import 'package:banking_app/blocs/auth/auth_bloc.dart';
 import 'package:banking_app/blocs/card/card_bloc.dart';
 import 'package:banking_app/blocs/card/card_event.dart';
+import 'package:banking_app/blocs/transaction/transaction_bloc.dart';
 import 'package:banking_app/blocs/user_profile/user_profile_bloc.dart';
 import 'package:banking_app/data/repositories/cards_repository.dart';
 import 'package:banking_app/data/repositories/user_profile_repository.dart';
@@ -22,34 +23,45 @@ class App extends StatelessWidget {
 
     return MultiRepositoryProvider(
       providers: [
-        RepositoryProvider(create: (_) => AuthRepository()),
-        RepositoryProvider(create: (_) => UserProfileRepository()),
-        RepositoryProvider(create: (_) => CardsRepository()),
+        RepositoryProvider(
+          create: (_) => AuthRepository(),
+        ),
+        RepositoryProvider(
+          create: (_) => UserProfileRepository(),
+        ),
+        RepositoryProvider(
+          create: (_) => CardsRepository(),
+        ),
       ],
       child: MultiBlocProvider(
         providers: [
           BlocProvider(
-            create: (context) =>
-                AuthBloc(authRepository: context.read<AuthRepository>())
-                  ..add(
-                    CheckAuthenticationEvent(),
-                  ),
+            create: (context) => AuthBloc(
+              authRepository: context.read<AuthRepository>(),
+            )..add(CheckAuthenticationEvent()),
           ),
           BlocProvider(
-              create: (context) => UserBloc(
-                  userProfileRepository:
-                      context.read<UserProfileRepository>())),
+              create: (context) =>
+                  UserProfileBloc(context.read<UserProfileRepository>())),
           BlocProvider(
-              create: (context) => UserCardsBloc(
-                      cardsRepository: context.read<CardsRepository>())
-                  ..add(GetCardsDatabaseEvent())),
+            create: (context) => UserCardsBloc(
+              cardsRepository: context.read<CardsRepository>(),
+            )
+              ..add(GetCardsDatabaseEvent())
+              ..add(GetActiveCards()),
+          ),
+          BlocProvider(
+            create: (context) => TransactionBloc(
+              cardsRepository: context.read<CardsRepository>(),
+            ),
+          )
         ],
         child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          initialRoute: RouteNames.splashScreen,
-          navigatorKey: navigatorKey,
-          onGenerateRoute: AppRoutes.generateRoute,
-        ),
+              debugShowCheckedModeBanner: false,
+              initialRoute: RouteNames.splashScreen,
+              navigatorKey: navigatorKey,
+              onGenerateRoute: AppRoutes.generateRoute,
+            ),
       ),
     );
   }

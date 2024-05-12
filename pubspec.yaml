@@ -54,12 +54,14 @@ dependencies:
   flutter_timezone: ^1.0.4
   permission_handler: ^11.3.1
   image_picker: ^1.0.7
-
+  intl: ^0.19.0
+  carousel_slider: ^4.2.1
   my_utils:
     path: packages/my_utils
   pinput: ^4.0.0
   local_auth: ^2.2.0
   lottie: ^3.1.0
+  mask_text_input_formatter: ^2.9.0
 
 
 dev_dependencies:

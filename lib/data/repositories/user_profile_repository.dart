@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../utils/constants/app_constants.dart';
@@ -8,18 +8,20 @@ import '../models/user_mode.dart';
 class UserProfileRepository {
   Future<NetworkResponse> addUser(UserModel userModel) async {
     try {
-      QuerySnapshot querySnapshot=await FirebaseFirestore.instance.collection(AppConstants.users).get();
+      QuerySnapshot querySnapshot =
+      await FirebaseFirestore.instance.collection(AppConstants.users).get();
 
-      List<UserModel> users=querySnapshot.docs.map((e) => UserModel.fromJson(e.data() as Map<String,dynamic>)).toList();
+      List<UserModel> users = querySnapshot.docs
+          .map((e) => UserModel.fromJson(e.data() as Map<String, dynamic>))
+          .toList();
 
-      bool isExists=false;
-
-      for(var user in users){
-        if(user.email==userModel.email){
-          isExists=true;
+      bool isExist = false;
+      for (var user in users) {
+        if (user.email == userModel.email) {
+          isExist = true;
         }
       }
-      if(!isExists){
+      if (isExist == false) {
         DocumentReference documentReference = await FirebaseFirestore.instance
             .collection(AppConstants.users)
             .add(userModel.toJson());
@@ -29,7 +31,8 @@ class UserProfileRepository {
             .doc(documentReference.id)
             .update({"userId": documentReference.id});
       }
-      return NetworkResponse(data: 'success');
+
+      return NetworkResponse(data: "success");
     } on FirebaseException catch (error) {
       return NetworkResponse(errorCode: error.code);
     }
@@ -40,8 +43,10 @@ class UserProfileRepository {
       await FirebaseFirestore.instance
           .collection(AppConstants.users)
           .doc(userModel.userId)
-          .update(userModel.toJsonForUpdate());
-      return NetworkResponse(data:'success');
+          .update(
+        userModel.toJsonForUpdate(),
+      );
+      return NetworkResponse(data: "success");
     } on FirebaseException catch (error) {
       return NetworkResponse(errorCode: error.code);
     }
@@ -54,36 +59,42 @@ class UserProfileRepository {
           .doc(docId)
           .delete();
 
-      return NetworkResponse(data: 'success');
+      return NetworkResponse(data: "success");
     } on FirebaseException catch (error) {
       return NetworkResponse(errorCode: error.code);
     }
   }
-  Future<NetworkResponse> getUserByDocID(String docId) async {
+
+  Future<NetworkResponse> getUserByDocId(String docId) async {
     try {
-      DocumentSnapshot documentSnapshot = (await FirebaseFirestore.instance
+      DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
           .collection(AppConstants.users)
           .doc(docId)
-          .get());
+          .get();
       return NetworkResponse(
-          data: UserModel.fromJson(
-              documentSnapshot.data() as Map<String, dynamic>));
+        data: UserModel.fromJson(
+          documentSnapshot.data() as Map<String, dynamic>,
+        ),
+      );
     } on FirebaseException catch (error) {
       return NetworkResponse(errorCode: error.code);
     }
   }
 
-
-  Future<NetworkResponse> getUserByUID(String uid) async {
+  Future<NetworkResponse> getUserByUid(String uid) async {
     try {
-      QuerySnapshot querySnapshot = (await FirebaseFirestore.instance
+
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
           .collection(AppConstants.users)
-          .where("authId", isEqualTo:uid)
-          .get());
-      List<UserModel> users = querySnapshot.docs.map((e) =>
-          UserModel.fromJson(e.data() as Map<String, dynamic>)).toList();
+          .where("authUid", isEqualTo: uid)
+          .get();
+
+      List<UserModel> users = querySnapshot.docs
+          .map((e) => UserModel.fromJson(e.data() as Map<String, dynamic>))
+          .toList();
+
       return NetworkResponse(
-          data:users.isEmpty?UserModel.initial():users.first);
+          data: users.isEmpty ? UserModel.initial() : users.first);
     } on FirebaseException catch (error) {
       return NetworkResponse(errorCode: error.code);
     }

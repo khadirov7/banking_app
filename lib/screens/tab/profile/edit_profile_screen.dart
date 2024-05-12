@@ -29,7 +29,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           centerTitle: true,
         ),
         body:
-            BlocBuilder<UserBloc, UserState>(builder: (context, state) {
+            BlocBuilder<UserProfileBloc, UserState>(builder: (context, state) {
               phoneController.text = state.userModel.phoneNumber;
               nameController.text = state.userModel.lastName;
           return ListView(
@@ -103,7 +103,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               lastName: nameController.text,
                               phoneNumber: phoneController.text
                           );
-                          context.read<UserBloc>().add(UpdateUserEvent(userModel: user));
+                          context.read<UserProfileBloc>().add(UpdateUserEvent(user));
                           Navigator.pop(context);
                         },
                         child: Text('Save Changes'),

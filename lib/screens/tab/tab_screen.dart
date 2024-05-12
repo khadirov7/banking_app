@@ -1,6 +1,7 @@
 import 'package:banking_app/screens/tab/history/history_screen.dart';
 import 'package:banking_app/screens/tab/home/home_screen.dart';
 import 'package:banking_app/screens/tab/profile/profile_screen.dart';
+import 'package:banking_app/screens/tab/transfer/transfer_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'card/card_screen.dart';
@@ -32,6 +33,16 @@ class _TabScreenState extends State<TabScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: FloatingActionButton(
+        shape: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        onPressed: () {
+Navigator.push(context, MaterialPageRoute(builder: (context) => TransferScreen()));
+        },
+        backgroundColor: Colors.deepPurpleAccent,
+        child: Icon(Icons.currency_exchange),
+      ),
       backgroundColor: Colors.lightBlue,
       body: Center(
         child: _pages.elementAt(_selectedTabIndex),
