@@ -3,10 +3,10 @@ import 'package:banking_app/blocs/auth/auth_event.dart';
 import 'package:banking_app/blocs/auth/auth_state.dart';
 import 'package:banking_app/blocs/user_profile/user_profile_bloc.dart';
 import 'package:banking_app/blocs/user_profile/user_profile_state.dart';
-import 'package:banking_app/data/models/forms_status_model.dart';
 import 'package:banking_app/screens/auth/auth_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../data/models/forms_status.dart';
 import 'edit_profile_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -25,7 +25,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         title: Text('Profile'),
         centerTitle: true,
       ),
-      body: BlocBuilder<UserProfileBloc,UserState>(builder: (context,state) {
+      body: BlocBuilder<UserProfileBloc,UserProfileState>(builder: (context,state) {
         return Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -38,7 +38,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               const SizedBox(height: 16),
                Text(
-              state.userModel.lastName,
+              state.userModel.fullName,
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8),

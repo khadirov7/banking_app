@@ -1,14 +1,13 @@
-import 'package:banking_app/blocs/card/card_state.dart';
 import 'package:banking_app/screens/tab/transfer/widget/amount_input.dart';
-import 'package:banking_app/screens/tab/transfer/widget/card_item_view.dart';
 import 'package:banking_app/screens/tab/transfer/widget/card_number_input.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:my_utils/my_utils.dart';
-import '../../../blocs/card/card_bloc.dart';
-import '../../../blocs/card/card_event.dart';
+import '../../../blocs/card/user_cards_bloc.dart';
+import '../../../blocs/card/user_cards_event.dart';
+import '../../../blocs/card/user_cards_state.dart';
 import '../../../blocs/transaction/transaction_bloc.dart';
 import '../../../blocs/transaction/transaction_event.dart';
 import '../../../blocs/transaction/transaction_state.dart';
@@ -75,8 +74,10 @@ class _TransferScreenState extends State<TransferScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
+        backgroundColor: Colors.black,
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back,
@@ -107,7 +108,7 @@ class _TransferScreenState extends State<TransferScreen> {
                             "Qabul qiluvchi: ${receiverCard.cardHolder.isEmpty ? "Topilmadi" : receiverCard.cardHolder}",
                             style: AppTextStyle.interSemiBold.copyWith(
                               fontSize: 14,
-                              color: Colors.black,
+                              color: Colors.white,
                             ),
                           )
                         ],
@@ -134,92 +135,94 @@ class _TransferScreenState extends State<TransferScreen> {
                   state.userCards.length,
                   (index) {
                     CardModel cardModel = state.userCards[index];
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Card(
-                        child: Container(
-                          width: 400,
-                          decoration: BoxDecoration(
-                            color: Colors.blueAccent,
-                            borderRadius: BorderRadius.circular(18),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  PopupMenuButton(
-                                    onSelected: (value) {
-                                      if (value == 'update') {
-                                      } else if (value == 'delete') {
-                                        context.read<UserCardsBloc>().add(
-                                            DeleteCardEvent(cardModel.cardId));
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          const SnackBar(
-                                              content: Text("Karta ochirildi")),
-                                        );
-                                      }
-                                    },
-                                    itemBuilder: (context) => [
-                                      const PopupMenuItem(
-                                        value: 'delete',
-                                        child: Text("Delete"),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 40.0, top: 15, bottom: 5),
-                                child: Text(
-                                  cardModel.cardNumber,
-                                  style: AppTextStyle.interSemiBold.copyWith(
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w900,
-                                      letterSpacing: 3),
-                                ),
-                              ),
-                              Center(
-                                child: Text(
-                                  cardModel.expireDate,
-                                  style: AppTextStyle.interSemiBold.copyWith(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w900,
-                                      letterSpacing: 3),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 20.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Card(
+                          child: Container(
+                            width: 400,
+                            decoration: BoxDecoration(
+                              color: Colors.blueAccent,
+                              borderRadius: BorderRadius.circular(18),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
-                                    Text(
-                                      cardModel.cardHolder,
-                                      style: AppTextStyle.interSemiBold
-                                          .copyWith(
-                                              color: Colors.white,
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.w900,
-                                              letterSpacing: 3),
-                                    ),
-                                    SvgPicture.asset(
-                                      "assets/icons/visa.svg",
-                                      width: 40,
+                                    Text("${cardModel.balance}"),
+                                    PopupMenuButton(
+                                      onSelected: (value) {
+                                        if (value == 'update') {
+                                        } else if (value == 'delete') {
+                                          context.read<UserCardsBloc>().add(
+                                              DeleteCardEvent(cardModel.cardId));
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            const SnackBar(
+                                                content: Text("Karta ochirildi")),
+                                          );
+                                        }
+                                      },
+                                      itemBuilder: (context) => [
+                                        const PopupMenuItem(
+                                          value: 'delete',
+                                          child: Text("Delete"),
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
-                              )
-                            ],
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 40.0, top: 15, bottom: 5),
+                                  child: Text(
+                                    cardModel.cardNumber,
+                                    style: AppTextStyle.interSemiBold.copyWith(
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w900,
+                                        letterSpacing: 3),
+                                  ),
+                                ),
+                                Center(
+                                  child: Text(
+                                    cardModel.expireDate,
+                                    style: AppTextStyle.interSemiBold.copyWith(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w900,
+                                        letterSpacing: 3),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 20.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Text(
+                                        cardModel.cardHolder,
+                                        style: AppTextStyle.interSemiBold
+                                            .copyWith(
+                                            color: Colors.white,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w900,
+                                            letterSpacing: 3),
+                                      ),
+                                      SvgPicture.asset(
+                                        "assets/icons/visa.svg",
+                                        width: 40,
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    );
+                      );
+
                   },
                 ),
                 options: CarouselOptions(

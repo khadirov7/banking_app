@@ -48,7 +48,8 @@ class _CardNumberInputState extends State<CardNumberInput> {
         },
 
         decoration: InputDecoration(
-
+          fillColor: Colors.white,
+          filled: true,
           suffixIcon: widget.controller.text.isNotEmpty
               ? IconButton(
             onPressed: () {

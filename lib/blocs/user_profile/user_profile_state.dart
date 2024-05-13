@@ -1,41 +1,40 @@
 import 'package:equatable/equatable.dart';
-import '../../data/models/forms_status_model.dart';
-import '../../data/models/user_mode.dart';
 
-class UserState extends Equatable {
+import '../../data/models/forms_status.dart';
+import '../../data/models/user_model.dart';
 
+class UserProfileState extends Equatable {
   final UserModel userModel;
-  final FormsStatus formsStatus;
+  final FormsStatus status;
   final String errorMessage;
   final String statusMessage;
 
-
-  const UserState({
-    required this.formsStatus,
+  const UserProfileState({
+    required this.status,
     required this.userModel,
+    required this.errorMessage,
     required this.statusMessage,
-    required this.errorMessage
   });
 
-  UserState copyWith({
+  UserProfileState copyWith({
     UserModel? userModel,
-    FormsStatus? formsStatus,
+    FormsStatus? status,
     String? errorMessage,
     String? statusMessage,
   }) {
-    return UserState(
-      formsStatus: formsStatus ?? this.formsStatus,
+    return UserProfileState(
       userModel: userModel ?? this.userModel,
+      status: status ?? this.status,
+      errorMessage: errorMessage ?? this.errorMessage,
       statusMessage: statusMessage ?? this.statusMessage,
-      errorMessage: errorMessage ?? this.errorMessage,);
+    );
   }
 
   @override
-  List<Object?> get props =>
-      [
+  List<Object?> get props => [
+        status,
         userModel,
         errorMessage,
-        formsStatus,
         statusMessage,
       ];
 }

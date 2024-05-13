@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:my_utils/my_utils.dart';
@@ -31,7 +32,7 @@ class CardItemView extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           gradient: LinearGradient(
             colors: [
-              Color(int.parse("0xff${cardModel.color}")),
+              Colors.deepPurple,
               Color(int.parse("0xff${cardModel.color}")).withOpacity(0.5),
             ],
           ),
@@ -63,10 +64,10 @@ class CardItemView extends StatelessWidget {
               visible: chipVisibility,
               child: Padding(
                 padding: EdgeInsets.only(bottom: 16.h),
-                child: Image.asset(
+                child: SvgPicture.asset(
                   "assets/icons/chip.svg",
-                  width: 56.w,
-                  height: 56.w,
+                  width: 41.w,
+                  height: 41.w,
                   fit: BoxFit.fill,
                 ),
               ),
@@ -118,10 +119,10 @@ class CardItemView extends StatelessWidget {
                     Icons.credit_card,
                     size: 56.w,
                   )
-                      : Image.asset(
+                      : SvgPicture.asset(
                     getIconPath(cardModel.type),
-                    width: 56.w,
-                    height: 56.w,
+                    width: 20.w,
+                    height: 20.w,
                   ),
                 ),
               ],

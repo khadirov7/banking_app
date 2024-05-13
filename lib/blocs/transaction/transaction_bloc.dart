@@ -1,26 +1,25 @@
 import 'package:banking_app/blocs/transaction/transaction_event.dart';
 import 'package:banking_app/blocs/transaction/transaction_state.dart';
-import 'package:banking_app/data/models/forms_status_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../data/models/card_model.dart';
+import '../../data/models/forms_status.dart';
 import '../../data/models/network_response.dart';
 import '../../data/repositories/cards_repository.dart';
-
 
 
 class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   TransactionBloc({required this.cardsRepository})
       : super(
-    TransactionState(
-      formStatus: FormsStatus.pure,
-      errorMessage: "",
-      statusMessage: "",
-      receiverCard: CardModel.initial(),
-      senderCard: CardModel.initial(),
-      amount: 0.0,
-    ),
-  ) {
+          TransactionState(
+            status: FormsStatus.pure,
+            errorMessage: "",
+            statusMessage: "",
+            receiverCard: CardModel.initial(),
+            senderCard: CardModel.initial(),
+            amount: 0.0,
+          ),
+        ) {
     on<SetAmountEvent>(_setAmount);
     on<SetReceiverCardEvent>(_setReceiverCard);
     on<SetSenderCardEvent>(_setSenderCard);
@@ -76,7 +75,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
       emit(
         state.copyWith(
           statusMessage: "transaction_success",
-          formStatus: FormsStatus.success,
+          status: FormsStatus.success,
         ),
       );
     }
@@ -94,7 +93,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   _setInitial(SetInitialEvent event, emit) {
     emit(
       TransactionState(
-        formStatus: FormsStatus.pure,
+        status: FormsStatus.pure,
         errorMessage: "",
         statusMessage: "",
         receiverCard: CardModel.initial(),

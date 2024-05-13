@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import '../../data/models/card_model.dart';
-import '../../data/models/forms_status_model.dart';
+import '../../data/models/forms_status.dart';
 
 class UserCardsState extends Equatable {
   final List<CardModel> userCards;
@@ -39,11 +39,11 @@ class UserCardsState extends Equatable {
 
   @override
   List<Object?> get props => [
-    status,
-    userCards,
-    errorMessage,
-    statusMessage,
-    cardsDB,
-    activeCards,
-  ];
+        status,
+        userCards,
+        errorMessage,
+        statusMessage,
+        cardsDB,
+        activeCards,
+      ];
 }

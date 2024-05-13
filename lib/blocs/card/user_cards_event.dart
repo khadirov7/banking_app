@@ -1,4 +1,3 @@
-
 import 'package:equatable/equatable.dart';
 
 import '../../data/models/card_model.dart';

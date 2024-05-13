@@ -1,11 +1,9 @@
-import 'package:banking_app/blocs/user_profile/user_porfile_event.dart';
-import 'package:banking_app/data/models/user_mode.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../../../blocs/user_profile/user_profile_bloc.dart';
+import '../../../blocs/user_profile/user_profile_event.dart';
 import '../../../blocs/user_profile/user_profile_state.dart';
+import '../../../data/models/user_model.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -29,9 +27,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           centerTitle: true,
         ),
         body:
-            BlocBuilder<UserProfileBloc, UserState>(builder: (context, state) {
+            BlocBuilder<UserProfileBloc, UserProfileState>(builder: (context, state) {
               phoneController.text = state.userModel.phoneNumber;
-              nameController.text = state.userModel.lastName;
+              nameController.text = state.userModel.fullName;
           return ListView(
             children: [
               Padding(
@@ -100,7 +98,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         onPressed: () async {
                           UserModel user=state.userModel;
                           user=user.copyWith(
-                              lastName: nameController.text,
+                              lastname: nameController.text,
                               phoneNumber: phoneController.text
                           );
                           context.read<UserProfileBloc>().add(UpdateUserEvent(user));

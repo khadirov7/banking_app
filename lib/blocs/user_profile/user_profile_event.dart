@@ -1,6 +1,7 @@
 
 import 'package:equatable/equatable.dart';
-import '../../data/models/user_mode.dart';
+
+import '../../data/models/user_model.dart';
 
 abstract class UserProfileEvent extends Equatable {}
 
@@ -41,6 +42,7 @@ class GetUserByDocIdEvent extends UserProfileEvent {
 }
 
 class GetCurrentUserEvent extends UserProfileEvent {
+  //TODO-4 Add UID to Event
   final String uid;
 
   GetCurrentUserEvent(this.uid);

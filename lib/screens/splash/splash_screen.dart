@@ -4,10 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_utils/my_utils.dart';
 import '../../blocs/auth/auth_bloc.dart';
 import '../../blocs/auth/auth_state.dart';
-import '../../blocs/user_profile/user_porfile_event.dart';
 import '../../blocs/user_profile/user_profile_bloc.dart';
+import '../../blocs/user_profile/user_profile_event.dart';
 import '../../data/local/storage_repository.dart';
-import '../../data/models/forms_status_model.dart';
+import '../../data/models/forms_status.dart';
 import '../routes.dart';
 
 class SplashScreen extends StatefulWidget {

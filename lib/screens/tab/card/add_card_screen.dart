@@ -1,27 +1,24 @@
 import 'package:banking_app/screens/tab/card/widget/expriy_date.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../blocs/card/card_bloc.dart';
-import '../../../blocs/card/card_event.dart';
-import '../../../blocs/card/card_state.dart';
+import '../../../blocs/card/user_cards_bloc.dart';
+import '../../../blocs/card/user_cards_event.dart';
+import '../../../blocs/card/user_cards_state.dart';
 import '../../../data/models/card_model.dart';
-import '../../../data/models/forms_status_model.dart';
-import '../../../utils/styles/app_text_style.dart';
+import '../../../data/models/forms_status.dart';
 import '../../auth/widget/my_custom_button.dart';
-import '../transfer/widget/card_item_view.dart';
 import '../transfer/widget/card_number_input.dart';
 
 class AddCardScreen extends StatefulWidget {
-  const AddCardScreen({super.key});
+  const AddCardScreen({Key? key}) : super(key: key);
 
   @override
-  State<AddCardScreen> createState() => _AddCardScreenState();
+  _AddCardScreenState createState() => _AddCardScreenState();
 }
 
 class _AddCardScreenState extends State<AddCardScreen> {
   final TextEditingController cardNumber = TextEditingController();
   final TextEditingController expireDate = TextEditingController();
-
   final FocusNode cardFocusNode = FocusNode();
   final FocusNode expireDateFocusNode = FocusNode();
   CardModel cardModel = CardModel.initial();
@@ -30,14 +27,12 @@ class _AddCardScreenState extends State<AddCardScreen> {
   void initState() {
     cardNumber.addListener(() {
       setState(() {});
-      cardModel =
-          cardModel.copyWith(cardNumber: cardNumber.text.replaceAll(" ", ""));
+      cardModel = cardModel.copyWith(cardNumber: cardNumber.text.replaceAll(" ", ""));
     });
 
     expireDate.addListener(() {
       setState(() {});
-      cardModel =
-          cardModel.copyWith(expireDate: expireDate.text.replaceAll(" ", ""));
+      cardModel = cardModel.copyWith(expireDate: expireDate.text.replaceAll(" ", ""));
     });
     super.initState();
   }
@@ -45,8 +40,10 @@ class _AddCardScreenState extends State<AddCardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
+        backgroundColor: Colors.black,
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back,
@@ -57,30 +54,23 @@ class _AddCardScreenState extends State<AddCardScreen> {
           },
         ),
         title: Text(
-          "Karta biriktirish",
-          style: AppTextStyle.interSemiBold.copyWith(color: Colors.white),
+          "Add Card",
+          style: TextStyle(color: Colors.white),
         ),
       ),
       body: BlocConsumer<UserCardsBloc, UserCardsState>(
         builder: (context, state) {
           return Column(
             children: [
-
-              CardNumberInput(
-                controller: cardNumber,
-                focusNode: cardFocusNode,
-              ),
-              ExpireDateInput(
-                focusNode: expireDateFocusNode,
-                controller: expireDate,
-              ),
+              CardNumberInput(controller: cardNumber, focusNode: cardFocusNode),
+              ExpireDateInput(controller: expireDate, focusNode: expireDateFocusNode),
               const Spacer(),
               MyCustomButton(
                 onTap: () {
-                  if (cardModel.cardNumber.length != 16) {
-                    return;
-                  }
-                  if (cardModel.expireDate.length != 5) {
+                  if (cardModel.cardNumber.length != 16 || cardModel.expireDate.length != 5) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text("Xato")),
+                    );
                     return;
                   }
 
@@ -104,9 +94,16 @@ class _AddCardScreenState extends State<AddCardScreen> {
                       break;
                     }
                   }
+
+                  if ((!isExist) && hasInDB) {
                     context.read<UserCardsBloc>().add(AddCardEvent(cardModel));
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text("Card already exists or not in database")),
+                    );
+                  }
                 },
-                title: "Qo'shish",
+                title: "Add",
                 isLoading: state.status == FormsStatus.loading,
               ),
             ],

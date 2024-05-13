@@ -1,47 +1,60 @@
-import 'package:banking_app/data/local/storage_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import '../exeption/firebase_exeption.dart';
+import '../local/storage_repository.dart';
+import '../models/exceptions/firebase_exceptions.dart';
 import '../models/network_response.dart';
 
 class AuthRepository {
-  Future<NetworkResponse> logInWithEmailAndPassword(
-      {required String email, required String password}) async {
+  Future<NetworkResponse> logInWithEmailAndPassword({
+    required String email,
+    required String password,
+  }) async {
     try {
       UserCredential userCredential =
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
       return NetworkResponse(data: userCredential);
     } on FirebaseAuthException catch (e) {
       return NetworkResponse(
-          errorText: LogInWithEmailAndPasswordFailure.fromCode(e.code).message,
-          errorCode: e.code);
-    } catch (_) {
-      return NetworkResponse(errorText: "An unknown occurred");
+        errorText: LogInWithEmailAndPasswordFailure.fromCode(e.code).message,
+        errorCode: e.code,
+      );
+    } catch (error) {
+      print("ERRORRR:${error.toString()}");
+      return NetworkResponse(
+        errorText: "An unknown exception occurred.${error}",
+      );
     }
   }
 
-  Future<NetworkResponse> registerWithEmailAndPassword(
-      {required String email, required String password}) async {
+  Future<NetworkResponse> registerWithEmailAndPassword({
+    required String email,
+    required String password,
+  }) async {
     try {
       UserCredential userCredential =
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
       return NetworkResponse(data: userCredential);
     } on FirebaseAuthException catch (e) {
+      print("ERROR:$e");
       return NetworkResponse(
-          errorText: SingUpWithEmailAndPasswordFailure.fromCode(e.code).message,
-          errorCode: e.code);
+        errorText: SignUpWithEmailAndPasswordFailure.fromCode(e.code).message,
+        errorCode: e.code,
+      );
     } catch (_) {
-      return NetworkResponse(errorText: "An unknown occurred");
+      print("ERROR:$_");
+      return NetworkResponse(
+        errorText: "An unknown exception occurred.",
+      );
     }
   }
 
-  Future<NetworkResponse> googleSingIn() async {
+  Future<NetworkResponse> googleSignIn() async {
     try {
       late final AuthCredential credential;
       final googleUser = await GoogleSignIn().signIn();
@@ -51,28 +64,39 @@ class AuthRepository {
         idToken: googleAuth.idToken,
       );
       UserCredential userCredential =
-      await FirebaseAuth.instance.signInWithCredential(credential);
+          await FirebaseAuth.instance.signInWithCredential(credential);
       return NetworkResponse(data: userCredential);
     } on FirebaseAuthException catch (e) {
       return NetworkResponse(
-        errorText: SingUpWithEmailAndPasswordFailure.fromCode(e.code).message,
-        errorCode: e.code,
-      );
+          errorCode: LogInWithGoogleFailure.fromCode(e.code).message);
     } catch (_) {
-      return NetworkResponse(errorText: "An unknown occurred");
+      return NetworkResponse(
+        errorText: "An unknown exception occurred.",
+      );
     }
   }
 
-  Future<NetworkResponse> logOut() async {
+  Future<NetworkResponse> logOutUser() async {
     try {
-      await StorageRepository.setString(key: 'pin', value: '');
-      await StorageRepository.setBool(key: 'biometrics',value: false);
+      await StorageRepository.setString(
+        key: "pin_code",
+        value: "",
+      );
+      await StorageRepository.setBool(
+        key: "biometrics_enabled",
+        value: false,
+      );
       await FirebaseAuth.instance.signOut();
-      return NetworkResponse(data: 'success');
+      return NetworkResponse(data: "success");
     } on FirebaseAuthException catch (e) {
-      return NetworkResponse(errorText: 'Error', errorCode: e.code);
+      return NetworkResponse(
+        errorText: "Error",
+        errorCode: e.code,
+      );
     } catch (_) {
-      return NetworkResponse(errorText: "An unknown occurred");
+      return NetworkResponse(
+        errorText: "An unknown exception occurred.",
+      );
     }
   }
 }

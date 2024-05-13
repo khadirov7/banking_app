@@ -1,15 +1,14 @@
-
+import 'package:flutter/cupertino.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import '../../utils/constants/app_constants.dart';
 import '../models/network_response.dart';
-import '../models/user_mode.dart';
+import '../models/user_model.dart';
 
 class UserProfileRepository {
   Future<NetworkResponse> addUser(UserModel userModel) async {
     try {
       QuerySnapshot querySnapshot =
-      await FirebaseFirestore.instance.collection(AppConstants.users).get();
+          await FirebaseFirestore.instance.collection(AppConstants.users).get();
 
       List<UserModel> users = querySnapshot.docs
           .map((e) => UserModel.fromJson(e.data() as Map<String, dynamic>))
@@ -34,6 +33,7 @@ class UserProfileRepository {
 
       return NetworkResponse(data: "success");
     } on FirebaseException catch (error) {
+      debugPrint("USER ADD ERROR:$error");
       return NetworkResponse(errorCode: error.code);
     }
   }
@@ -44,8 +44,8 @@ class UserProfileRepository {
           .collection(AppConstants.users)
           .doc(userModel.userId)
           .update(
-        userModel.toJsonForUpdate(),
-      );
+            userModel.toJsonForUpdate(),
+          );
       return NetworkResponse(data: "success");
     } on FirebaseException catch (error) {
       return NetworkResponse(errorCode: error.code);
@@ -84,6 +84,7 @@ class UserProfileRepository {
   Future<NetworkResponse> getUserByUid(String uid) async {
     try {
 
+      //TODO-3 Get User by UID
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
           .collection(AppConstants.users)
           .where("authUid", isEqualTo: uid)

@@ -1,20 +1,16 @@
-import 'package:banking_app/blocs/auth/auth_event.dart';
-import 'package:banking_app/blocs/auth/auth_state.dart';
-import 'package:banking_app/data/models/forms_status_model.dart';
-import 'package:banking_app/data/models/network_response.dart';
-import 'package:banking_app/data/models/user_mode.dart';
-import 'package:banking_app/data/repositories/auth_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../data/models/forms_status.dart';
+import '../../data/models/network_response.dart';
+import '../../data/models/user_model.dart';
+import '../../data/repositories/auth_repository.dart';
+import 'auth_event.dart';
+import 'auth_state.dart';
+
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  AuthBloc({required this.authRepository})
-      : super(AuthState(
-      errorMessage: '',
-      statusMessage: '',
-      status: FormsStatus.pure,
-      userModel: UserModel.initial()
-  )) {
+  AuthBloc({required this.authRepository}) : super(AuthState.init()) {
     on<CheckAuthenticationEvent>(_checkAuthentication);
     on<LoginUserEvent>(_loginUser);
     on<RegisterUserEvent>(_registerUser);
@@ -26,10 +22,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   _checkAuthentication(CheckAuthenticationEvent event, emit) async {
     User? user = FirebaseAuth.instance.currentUser;
+
+    debugPrint("CURRENT USER:$user");
     if (user == null) {
       emit(state.copyWith(status: FormsStatus.unauthenticated));
-    }
-    else {
+    } else {
       emit(state.copyWith(status: FormsStatus.authenticated));
     }
   }
@@ -37,85 +34,102 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   _loginUser(LoginUserEvent event, emit) async {
     emit(state.copyWith(status: FormsStatus.loading));
     NetworkResponse networkResponse =
-    await authRepository.logInWithEmailAndPassword(
-      email: "${event.username}@gmail.com",
+        await authRepository.logInWithEmailAndPassword(
+      email: "${event.username.toLowerCase()}@gmail.com",
       password: event.password,
     );
     if (networkResponse.errorText.isEmpty) {
+
       UserCredential userCredential = networkResponse.data as UserCredential;
-      UserModel userModel=state.userModel.copyWith(
-          authUid:userCredential.user!.uid
-      );
-      emit(state.copyWith(
-          status: FormsStatus.authenticated,
-          userModel:userModel
-      ));
+
+      UserModel userModel = state.userModel.copyWith(authUid: userCredential.user!.uid);
+
+      emit(state.copyWith(status: FormsStatus.authenticated,userModel: userModel));
     } else {
-      emit(state.copyWith(
-          statusMessage: networkResponse.errorText, status: FormsStatus.error));
+      emit(
+        state.copyWith(
+          status: FormsStatus.error,
+          errorMessage: networkResponse.errorText,
+        ),
+      );
     }
   }
 
   _registerUser(RegisterUserEvent event, emit) async {
     emit(state.copyWith(status: FormsStatus.loading));
     NetworkResponse networkResponse =
-    await authRepository.registerWithEmailAndPassword(
-      email:event.userModel.email,
+        await authRepository.registerWithEmailAndPassword(
+      email: event.userModel.email,
       password: event.userModel.password,
     );
     if (networkResponse.errorText.isEmpty) {
+      debugPrint("REGISTERED USER!!!");
       UserCredential userCredential = networkResponse.data as UserCredential;
-      UserModel userModel=event.userModel.copyWith(
-          authUid:userCredential.user!.uid
+      UserModel userModel = event.userModel.copyWith(
+        authUid: userCredential.user!.uid,
       );
-      emit(state.copyWith(
+      emit(
+        state.copyWith(
           status: FormsStatus.authenticated,
           statusMessage: "registered",
-          userModel: userModel
-      ));
+          userModel: userModel,
+        ),
+      );
     } else {
-      emit(state.copyWith(
-          statusMessage: networkResponse.errorText, status: FormsStatus.error));
+      debugPrint("ERROR REGISTER USER!!! ${networkResponse.errorCode}");
+      emit(
+        state.copyWith(
+          status: FormsStatus.error,
+          errorMessage: networkResponse.errorText,
+        ),
+      );
     }
   }
 
   _logOutUser(LogOutUserEvent event, emit) async {
     emit(state.copyWith(status: FormsStatus.loading));
-    NetworkResponse networkResponse =
-    await authRepository.logOut();
+    NetworkResponse networkResponse = await authRepository.logOutUser();
     if (networkResponse.errorText.isEmpty) {
-      emit(state.copyWith(
-        status: FormsStatus.unauthenticated,
-      ));
+      emit(state.copyWith(status: FormsStatus.unauthenticated));
     } else {
-      emit(state.copyWith(
-          statusMessage: networkResponse.errorText, status: FormsStatus.error));
+      emit(
+        state.copyWith(
+          status: FormsStatus.error,
+          errorMessage: networkResponse.errorText,
+        ),
+      );
     }
   }
 
   _googleSignIn(SignInWithGoogleEvent event, emit) async {
     emit(state.copyWith(status: FormsStatus.loading));
-    NetworkResponse networkResponse =
-    await authRepository.googleSingIn();
+    NetworkResponse networkResponse = await authRepository.googleSignIn();
     if (networkResponse.errorText.isEmpty) {
       UserCredential userCredential = networkResponse.data;
-      emit(state.copyWith(
+      emit(
+        state.copyWith(
           statusMessage: "registered",
           status: FormsStatus.authenticated,
           userModel: UserModel(
-            authUid: userCredential.user!.uid,
             fcm: "",
-            userName:"",
+            authUid: userCredential.user!.uid,
             password: "",
-            imageUrl: userCredential.user!.photoURL!,
-            userId: '',
-            email: userCredential.user!.email!,
-            phoneNumber:'',
-            lastName: userCredential.user!.displayName!,)
-      ));
+            email: userCredential.user!.email ?? "",
+            imageUrl: userCredential.user!.photoURL ?? "",
+            fullName: userCredential.user!.displayName ?? "",
+            phoneNumber: userCredential.user!.phoneNumber ?? "",
+            userId: "",
+            username: userCredential.user!.displayName ?? "",
+          ),
+        ),
+      );
     } else {
-      emit(state.copyWith(
-          statusMessage: networkResponse.errorText, status: FormsStatus.error));
+      emit(
+        state.copyWith(
+          status: FormsStatus.error,
+          errorMessage: networkResponse.errorText,
+        ),
+      );
     }
   }
 }

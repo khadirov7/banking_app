@@ -1,5 +1,5 @@
-import 'package:banking_app/data/models/user_mode.dart';
 import 'package:equatable/equatable.dart';
+import '../../data/models/user_model.dart';
 
 abstract class AuthEvent extends Equatable {
   @override
@@ -18,25 +18,31 @@ class LoginUserEvent extends AuthEvent {
   LoginUserEvent({
     required this.password,
     required this.username,
-});
+  });
+
   @override
-  List<Object?> get props => [password,username];
+  List<Object?> get props => [
+        password,
+        username,
+      ];
 }
 
 class RegisterUserEvent extends AuthEvent {
   final UserModel userModel;
 
-  RegisterUserEvent({
-    required this.userModel,
-  });
+  RegisterUserEvent({required this.userModel});
+
   @override
-  List<Object?> get props => [userModel];
+  List<Object?> get props => [
+        userModel,
+      ];
 }
 
 class LogOutUserEvent extends AuthEvent {
   @override
   List<Object?> get props => [];
 }
+
 
 class SignInWithGoogleEvent extends AuthEvent {
   @override

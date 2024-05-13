@@ -1,7 +1,6 @@
-import 'package:banking_app/data/models/forms_status_model.dart';
-import 'package:banking_app/data/models/user_mode.dart';
 import 'package:equatable/equatable.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import '../../data/models/forms_status.dart';
+import '../../data/models/user_model.dart';
 
 class AuthState extends Equatable {
   final String errorMessage;
@@ -10,26 +9,40 @@ class AuthState extends Equatable {
   final UserModel userModel;
 
   const AuthState({
-    required this.userModel,
     required this.status,
     required this.errorMessage,
     required this.statusMessage,
+    required this.userModel,
   });
 
   AuthState copyWith({
-    UserModel? userModel,
     String? errorMessage,
     String? statusMessage,
     FormsStatus? status,
+    UserModel? userModel,
   }) {
     return AuthState(
-      userModel: userModel ?? this.userModel,
       status: status ?? this.status,
-      errorMessage: errorMessage ?? this.errorMessage,
       statusMessage: statusMessage ?? this.statusMessage,
+      errorMessage: errorMessage ?? this.errorMessage,
+      userModel: userModel ?? this.userModel,
+    );
+  }
+
+  factory AuthState.init() {
+    return AuthState(
+      status: FormsStatus.pure,
+      statusMessage: '',
+      errorMessage: '',
+      userModel: UserModel.initial(),
     );
   }
 
   @override
-  List<Object?> get props => [status, errorMessage, statusMessage,userModel];
+  List<Object?> get props => [
+        status,
+        statusMessage,
+        errorMessage,
+        userModel,
+      ];
 }

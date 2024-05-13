@@ -1,24 +1,25 @@
+import 'package:banking_app/blocs/card/user_cards_event.dart';
+import 'package:banking_app/blocs/card/user_cards_state.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../data/models/card_model.dart';
-import '../../data/models/forms_status_model.dart';
+import '../../data/models/forms_status.dart';
 import '../../data/models/network_response.dart';
 import '../../data/repositories/cards_repository.dart';
-import 'card_event.dart';
-import 'card_state.dart';
 
 class UserCardsBloc extends Bloc<UserCardsEvent, UserCardsState> {
   UserCardsBloc({required this.cardsRepository})
       : super(
-    const UserCardsState(
-      userCards: [],
-      cardsDB: [],
-      activeCards: [],
-      status: FormsStatus.pure,
-      errorMessage: "",
-      statusMessage: "",
-    ),
-  ) {
+          const UserCardsState(
+            userCards: [],
+            cardsDB: [],
+            activeCards: [],
+            status: FormsStatus.pure,
+            errorMessage: "",
+            statusMessage: "",
+          ),
+        ) {
     on<AddCardEvent>(_addCard);
     on<UpdateCardEvent>(_updateCard);
     on<DeleteCardEvent>(_deleteCard);
@@ -52,7 +53,7 @@ class UserCardsBloc extends Bloc<UserCardsEvent, UserCardsState> {
     emit(state.copyWith(status: FormsStatus.loading));
 
     NetworkResponse response =
-    await cardsRepository.updateCard(event.cardModel);
+        await cardsRepository.updateCard(event.cardModel);
     if (response.errorText.isEmpty) {
       emit(state.copyWith(status: FormsStatus.success));
     } else {
@@ -67,7 +68,7 @@ class UserCardsBloc extends Bloc<UserCardsEvent, UserCardsState> {
     emit(state.copyWith(status: FormsStatus.loading));
 
     NetworkResponse response =
-    await cardsRepository.deleteCard(event.cardDocId);
+        await cardsRepository.deleteCard(event.cardDocId);
     if (response.errorText.isEmpty) {
       emit(state.copyWith(status: FormsStatus.success));
     } else {

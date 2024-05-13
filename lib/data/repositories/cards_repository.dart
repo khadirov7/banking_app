@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import '../../utils/constants/app_constants.dart';
 import '../models/card_model.dart';
 import '../models/network_response.dart';
@@ -55,17 +56,17 @@ class CardsRepository {
           .where("userId", isEqualTo: userId)
           .snapshots()
           .map((event) =>
-          event.docs.map((doc) => CardModel.fromJson(doc.data())).toList());
+              event.docs.map((doc) => CardModel.fromJson(doc.data())).toList());
 
   Stream<List<CardModel>> getCardsDatabase() => FirebaseFirestore.instance
-      .collection(AppConstants.cardDatabase)
+      .collection(AppConstants.cardsDatabase)
       .snapshots()
       .map((event) =>
-      event.docs.map((doc) => CardModel.fromJson(doc.data())).toList());
+          event.docs.map((doc) => CardModel.fromJson(doc.data())).toList());
 
   Stream<List<CardModel>> getActiveCards() => FirebaseFirestore.instance
       .collection(AppConstants.cards)
       .snapshots()
       .map((event) =>
-      event.docs.map((doc) => CardModel.fromJson(doc.data())).toList());
+          event.docs.map((doc) => CardModel.fromJson(doc.data())).toList());
 }

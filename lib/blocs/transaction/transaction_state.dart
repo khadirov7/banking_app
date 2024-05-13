@@ -1,49 +1,46 @@
-import 'package:banking_app/data/models/card_model.dart';
-import 'package:banking_app/data/models/forms_status_model.dart';
-import 'package:equatable/equatable.dart';
 
-class TransactionState extends Equatable {
+import '../../data/models/card_model.dart';
+import '../../data/models/forms_status.dart';
+import '../base/base_state.dart';
+
+class TransactionState extends BaseState {
   const TransactionState({
+    required super.status,
+    required super.errorMessage,
+    required super.statusMessage,
+    required this.amount,
     required this.receiverCard,
     required this.senderCard,
-    required this.amount,
-    required this.formStatus,
-    required this.errorMessage,
-    required this.statusMessage,
   });
 
   final CardModel receiverCard;
   final CardModel senderCard;
   final double amount;
-  final FormsStatus formStatus;
-  final String errorMessage;
-  final String statusMessage;
 
   TransactionState copyWith({
     CardModel? receiverCard,
     CardModel? senderCard,
     double? amount,
-    FormsStatus? formStatus,
+    FormsStatus? status,
     String? errorMessage,
     String? statusMessage,
-  }) {
-    return TransactionState(
-      receiverCard: receiverCard ?? this.receiverCard,
-      senderCard: senderCard ?? this.senderCard,
-      amount: amount ?? this.amount,
-      formStatus: formStatus ?? this.formStatus,
-      errorMessage: errorMessage ?? this.errorMessage,
-      statusMessage: statusMessage ?? this.statusMessage,
-    );
-  }
+  }) =>
+      TransactionState(
+        status: status ?? this.status,
+        receiverCard: receiverCard ?? this.receiverCard,
+        senderCard: senderCard ?? this.senderCard,
+        amount: amount ?? this.amount,
+        errorMessage: errorMessage ?? this.errorMessage,
+        statusMessage: statusMessage ?? this.statusMessage,
+      );
 
   @override
   List<Object?> get props => [
-    receiverCard,
-    senderCard,
-    amount,
-    formStatus,
-    errorMessage,
-    statusMessage,
-  ];
+        status,
+        errorMessage,
+        statusMessage,
+        receiverCard,
+        senderCard,
+        amount,
+      ];
 }

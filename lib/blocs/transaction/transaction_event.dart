@@ -1,4 +1,6 @@
+
 import 'package:equatable/equatable.dart';
+
 import '../../data/models/card_model.dart';
 
 abstract class TransactionEvent extends Equatable {}

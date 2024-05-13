@@ -8,7 +8,7 @@ import 'package:pinput/pinput.dart';
 import '../../blocs/auth/auth_bloc.dart';
 import '../../blocs/auth/auth_event.dart';
 import '../../blocs/auth/auth_state.dart';
-import '../../data/models/forms_status_model.dart';
+import '../../data/models/forms_status.dart';
 import '../../services/biometric_services.dart';
 import '../../utils/colors/app_colors.dart';
 import '../../utils/styles/app_text_style.dart';
